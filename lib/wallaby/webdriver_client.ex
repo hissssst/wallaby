@@ -440,6 +440,16 @@ defmodule Wallaby.WebdriverClient do
   end
 
   @doc """
+  Deletes all cookies for a session.
+  """
+  @spec delete_all_cookies(Session.t()) :: :ok
+  def delete_all_cookies(session) do
+    with {:ok, _} <- request(:delete, "#{session.url}/cookie") do
+      :ok
+    end
+  end
+
+  @doc """
   Sets the size of the window
   """
   @spec set_window_size(parent, non_neg_integer, non_neg_integer) :: {:ok, map}

@@ -440,6 +440,8 @@ defmodule Wallaby.Chrome do
   @doc false
   def cookies(session), do: delegate(:cookies, session)
   @doc false
+  def delete_all_cookies(session), do: delegate(:delete_all_cookies, session)
+  @doc false
   def current_path(session), do: delegate(:current_path, session)
   @doc false
   def current_url(session), do: delegate(:current_url, session)
@@ -531,9 +533,11 @@ defmodule Wallaby.Chrome do
   Chromium specific function to execute CDP (Chrome Devtools Protocol) commands
   https://chromedevtools.github.io/devtools-protocol/
   """
-  @spec execute_cdp_command(Wallaby.Session.t(), String.t(), map()) :: {:ok, any()} | {:error, any()}
+  @spec execute_cdp_command(Wallaby.Session.t(), String.t(), map()) ::
+          {:ok, any()} | {:error, any()}
   def execute_cdp_command(session, command, params) do
     url = "#{session.session_url}/goog/cdp/execute"
+
     case Wallaby.HTTPClient.request(:post, url, %{cmd: command, params: params}) do
       {:ok, %{"status" => 0, "value" => value}} ->
         {:ok, value}

@@ -48,6 +48,11 @@ defmodule Wallaby.Driver do
   @callback cookies(Session.t()) :: {:ok, [%{String.t() => String.t()}]} | {:error, reason}
 
   @doc """
+  Invoked to delete all cookies for the given session.
+  """
+  @callback delete_all_cookies(Session.t()) :: :ok | {:error, reason}
+
+  @doc """
   Invoked to get the current path of the browser's session.
   """
   @callback current_path(Session.t()) :: {:ok, String.t()} | {:error, reason}

@@ -199,6 +199,11 @@ defmodule Wallaby.Selenium do
   end
 
   @doc false
+  def delete_all_cookies(%Session{} = session) do
+    WebdriverClient.delete_all_cookies(session)
+  end
+
+  @doc false
   def current_path(%Session{} = session) do
     with {:ok, url} <- WebdriverClient.current_url(session) do
       url

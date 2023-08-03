@@ -142,7 +142,7 @@ defmodule Wallaby.Browser do
   loop forever (or until the test is killed by exunit).
   """
   @type sync_result :: {:ok, any()} | {:error, any()}
-  @spec retry((() -> sync_result), non_neg_integer()) :: sync_result()
+  @spec retry((-> sync_result), non_neg_integer()) :: sync_result()
 
   def retry(f, start_time \\ current_time()) do
     case f.() do
@@ -1277,8 +1277,11 @@ defmodule Wallaby.Browser do
 
   def cookies(%Session{driver: driver} = session) do
     {:ok, cookies_list} = driver.cookies(session)
-
     cookies_list
+  end
+
+  def delete_all_cookies(%Session{driver: driver} = session) do
+    :ok = driver.delete_all_cookies(session)
   end
 
   def set_cookie(%Session{driver: driver} = session, key, value, attributes \\ []) do
