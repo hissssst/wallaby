@@ -2,6 +2,14 @@
 
 ## Main
 
+## v0.30.5
+
+- Workaround for chromedriver 115 regression (#740)
+
+## v0.30.4
+
+- Set headless and binary chromedriver opts from the `@sessions` attribute in feature tests (#736)
+
 ## v0.30.3
 
 - Better support Chromedriver tests on machines with tons of cores
