@@ -142,12 +142,13 @@ defmodule Wallaby.Chrome do
 
   @doc false
   def init(_) do
+    amount = Application.get_env(:wallaby, :chromedrivers_amount) || min(System.schedulers_online(), 10)
     children = [
       Wallaby.Driver.LogStore,
       {PartitionSupervisor,
        child_spec: Wallaby.Chrome.Chromedriver,
        name: Wallaby.Chromedrivers,
-       partitions: min(System.schedulers_online(), 10)}
+       partitions: amount}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
