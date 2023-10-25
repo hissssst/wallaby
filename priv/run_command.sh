@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 script_status="running"
 
@@ -9,14 +9,11 @@ pid1=$!
 echo "PID: $pid1"
 
 shutdown(){
-    local pid1=$1
-    local pid2=$1
-
     if [ $script_status = "running" ]; then
         script_status="shutting down"
-        wait $pid1
+        wait "$1"
         ret=$?
-        kill -KILL $pid2
+        kill -KILL "$2"
         exit $ret
     fi
 }
