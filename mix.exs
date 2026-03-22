@@ -2,7 +2,7 @@ defmodule Wallaby.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/elixir-wallaby/wallaby"
-  @version "0.30.6"
+  @version "0.30.12"
   @drivers ~w(selenium chrome)
   @selected_driver System.get_env("WALLABY_DRIVER")
   @maintainers ["Mitchell Hanberg"]
@@ -22,12 +22,17 @@ defmodule Wallaby.Mixfile do
 
       # Custom testing
       aliases: ["test.all": ["test", "test.drivers"], "test.drivers": &test_drivers/1],
-      preferred_cli_env: [
-        "test.all": :test,
-        "test.drivers": :test
-      ],
       test_paths: test_paths(@selected_driver),
       dialyzer: dialyzer()
+    ]
+  end
+
+  def cli do
+    [
+      preferred_envs: [
+        "test.all": :test,
+        "test.drivers": :test
+      ]
     ]
   end
 
@@ -46,9 +51,7 @@ defmodule Wallaby.Mixfile do
       {:httpoison, "~> 0.12 or ~> 1.0 or ~> 2.0"},
       {:web_driver_client, "~> 0.2.0"},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
-      {:benchee, "~> 0.9", only: :dev},
-      {:benchee_html, "~> 0.3", only: :dev},
-      {:credo, "~> 1.6.4", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:bypass, "~> 1.0.0", only: :test},
       {:ex_doc, "~> 0.28", only: :dev},
       {:ecto_sql, ">= 3.0.0", optional: true},

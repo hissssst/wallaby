@@ -208,7 +208,7 @@ defmodule Wallaby.Browser do
   """
   @spec attach_file(parent, Query.t(), path: String.t()) :: parent
   def attach_file(parent, query, path: path) do
-    case is_selenium?(parent) do
+    case selenium?(parent) do
       true ->
         # local/remote selenium will only properly attach
         # & upload a local file with `send_keys`
@@ -954,7 +954,7 @@ defmodule Wallaby.Browser do
         |> Query.result()
 
       {:error, {:not_found, result}} ->
-        query = %Query{query | result: result}
+        query = %{query | result: result}
 
         case validate_html(parent, query) do
           {:ok, _} ->
@@ -1008,7 +1008,7 @@ defmodule Wallaby.Browser do
   def all(parent, %Query{} = query) do
     find(
       parent,
-      %Query{query | conditions: Keyword.merge(query.conditions, count: nil, minimum: 0)}
+      %{query | conditions: Keyword.merge(query.conditions, count: nil, minimum: 0)}
     )
   end
 
@@ -1171,7 +1171,7 @@ defmodule Wallaby.Browser do
         error ->
           case error do
             {:error, {:not_found, results}} ->
-              query = %Query{query | result: results}
+              query = %{query | result: results}
 
               raise ExpectationNotMetError,
                     Query.ErrorMessage.message(query, :not_found)
@@ -1507,7 +1507,7 @@ defmodule Wallaby.Browser do
              {:ok, elements} <- validate_selected(query, elements),
              {:ok, elements} <- validate_count(query, elements),
              {:ok, elements} <- do_at(query, elements) do
-          {:ok, %Query{query | result: elements}}
+          {:ok, %{query | result: elements}}
         end
       rescue
         StaleReferenceError ->
@@ -1561,7 +1561,7 @@ defmodule Wallaby.Browser do
     "file://" <> (path |> Path.expand() |> URI.encode())
   end
 
-  defp is_selenium?(parent) do
+  defp selenium?(parent) do
     parent.driver == Wallaby.Selenium
   end
 end

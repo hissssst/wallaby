@@ -108,19 +108,39 @@ You'll need to install the actual drivers as well.
   - [`selenium`](https://www.selenium.dev/downloads/)
   - [`geckodriver`](https://github.com/mozilla/geckodriver) (for Firefox) or [`chromedriver`](https://chromedriver.chromium.org/downloads) (for Chrome)
 
+Ensure that Wallaby is started in your `test_helper.exs`:
+
+```elixir
+{:ok, _} = Application.ensure_all_started(:wallaby)
+```
+
 When calling `use Wallaby.Feature` and using Ecto, please configure your `otp_app`.
 
 ```elixir
 config :wallaby, otp_app: :your_app
 ```
 
-Then ensure that Wallaby is started in your `test_helper.exs`:
+### Phoenix
+
+Enable Phoenix to serve endpoints in tests:
 
 ```elixir
-{:ok, _} = Application.ensure_all_started(:wallaby)
+# config/test.exs
+
+config :your_app, YourAppWeb.Endpoint,
+  server: true
 ```
 
-### Phoenix
+In your `test_helper.exs` you can provide some configuration to Wallaby.
+At a minimum, you need to specify a `:base_url`, so Wallaby knows how to resolve relative paths.
+
+```elixir
+# test/test_helper.exs
+
+Application.put_env(:wallaby, :base_url, YourAppWeb.Endpoint.url)
+```
+
+#### Ecto
 
 If you're testing a Phoenix application with Ecto and a database that [supports sandbox mode](https://hexdocs.pm/ecto_sql/Ecto.Adapters.SQL.Sandbox.html), you can enable concurrent testing by adding the `Phoenix.Ecto.SQL.Sandbox` plug to your `Endpoint`.
 It's important that this is at the top of `endpoint.ex` before any other plugs.
@@ -131,8 +151,8 @@ It's important that this is at the top of `endpoint.ex` before any other plugs.
 defmodule YourAppWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :your_app
 
-  if sandbox = Application.get_env(:your_app, :sandbox) do
-    plug Phoenix.Ecto.SQL.Sandbox, sandbox: sandbox
+  if Application.compile_env(:your_app, :sandbox, false) do
+    plug Phoenix.Ecto.SQL.Sandbox
   end
 
   # ...
@@ -144,13 +164,10 @@ defmodule YourAppWeb.Endpoint do
 
 It's also important to make sure the `user_agent` is passed in the `connect_info` in order to allow the database and browser session to be wired up correctly.
 
-Then make sure Phoenix is set up to serve endpoints in tests and that the sandbox is enabled:
+Then make sure sandbox is enabled:
 
 ```elixir
 # config/test.exs
-
-config :your_app, YourAppWeb.Endpoint,
-  server: true
 
 config :your_app, :sandbox, Ecto.Adapters.SQL.Sandbox
 ```
@@ -160,7 +177,7 @@ This enables the database connection to be owned by the process that is running 
 If you have other resources that should be shared by both processes (e.g. expectations or stubs if using [Mox](https://hexdocs.pm/mox/Mox.html)), then you can define a custom sandbox module:
 
 ```elixir
-# config/support/sandbox.ex
+# test/support/sandbox.ex
 
 defmodule YourApp.Sandbox do
   def allow(repo, owner_pid, child_pid) do
@@ -179,15 +196,6 @@ And update the test config to use your custom sandbox:
 # config/test.exs
 
 config :your_app, :sandbox, YourApp.Sandbox
-```
-
-Finally, in your `test_helper.exs` you can provide some configuration to Wallaby.
-At minimum, you need to specify a `:base_url`, so Wallaby knows how to resolve relative paths.
-
-```elixir
-# test/test_helper.exs
-
-Application.put_env(:wallaby, :base_url, YourAppWeb.Endpoint.url)
 ```
 
 #### Assets
@@ -291,7 +299,7 @@ If you're testing an umbrella application containing a Phoenix application for t
 defmodule MyWebApp.Endpoint do
   use Phoenix.Endpoint, otp_app: :my_web_app
 
-  if Application.get_env(:my_persistence_app, :sql_sandbox) do
+  if Application.compile_env(:my_persistence_app, :sandbox, false) do
     plug Phoenix.Ecto.SQL.Sandbox
   end
 ```
@@ -590,6 +598,33 @@ Application.put_env(:wallaby, :js_logger, file)
 
 Logging can be disabled by setting `:js_logger` to `nil`.
 
+### Enabling WebAuthn Virtual Authenticator (Chrome only)
+
+When wanting to test Passkeys with Wallaby, you have to make sure WebAuthn Virtual Authenticator is enabled. You must execute this code to enable this feature in Chrome via the Chromedriver. This configuration will make Chrome automatically present a virtual Passkey whenever WebAuthn [create()](https://developer.mozilla.org/en-US/docs/Web/API/CredentialsContainer/create) or [get()](https://developer.mozilla.org/en-US/docs/Web/API/CredentialsContainer/get) APIs are called in browser.
+
+```elixir
+{:ok, _result} =
+  Wallaby.HTTPClient.request(:post, "#{session.url}/chromium/send_command_and_get_result", %{
+    cmd: "WebAuthn.enable",
+    params: %{}
+  })
+
+{:ok, result} =
+  Wallaby.HTTPClient.request(:post, "#{session.url}/chromium/send_command_and_get_result", %{
+    cmd: "WebAuthn.addVirtualAuthenticator",
+    params: %{
+      options: %{
+        protocol: "ctap2",
+        transport: "internal",
+        hasResidentKey: true,
+        hasUserVerification: true,
+        isUserVerified: true,
+        automaticPresenceSimulation: true
+      }
+    }
+  })
+```
+
 ## Configuration
 
 ### Adjusting timeouts
@@ -636,3 +671,7 @@ $ WALLABY_DRIVER=selenium mix test
 # All tests
 $ mix test.all
 ```
+
+### Helpful Links
+
+- [ChromeDriver Issue Tracker](https://issues.chromium.org/issues?q=status:open%20componentid:1608258&s=created_time:desc)

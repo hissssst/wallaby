@@ -223,7 +223,7 @@ defmodule Wallaby.Element do
   @doc """
   Returns a tuple `{width, height}` with the size of the given element.
   """
-  @spec size(t) :: t
+  @spec size(t) :: {non_neg_integer, non_neg_integer}
 
   def size(%__MODULE__{driver: driver} = element) do
     element
@@ -286,6 +286,11 @@ defimpl Inspect, for: Wallaby.Element do
           []
       end
 
-    concat([Inspect.Any.inspect(element, opts)] ++ additional_output)
+    element
+    |> Inspect.Any.inspect(opts)
+    |> maybe_concat(additional_output)
   end
+
+  defp maybe_concat(inspect_result, []), do: inspect_result
+  defp maybe_concat(inspect_result, output), do: concat([inspect_result | output])
 end

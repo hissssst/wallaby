@@ -1,6 +1,42 @@
 # Changelog
 
-## Main
+## [0.30.12](https://github.com/elixir-wallaby/wallaby/compare/v0.30.11...v0.30.12) (2026-01-09)
+
+
+### Bug Fixes
+
+* flush a DOWN message if one was present ([#832](https://github.com/elixir-wallaby/wallaby/issues/832)) ([63d64de](https://github.com/elixir-wallaby/wallaby/commit/63d64dec492d06f4b609c67bfef41deac161b8a5))
+
+## [0.30.11](https://github.com/elixir-wallaby/wallaby/compare/v0.30.10...v0.30.11) (2025-10-29)
+
+
+### Bug Fixes
+
+* removed elixir 1.19 warnings ([#823](https://github.com/elixir-wallaby/wallaby/issues/823)) ([f64b943](https://github.com/elixir-wallaby/wallaby/commit/f64b943aca168ddf5869081201a5993384a66d61))
+
+## v0.30.10
+
+- only automatically start sessions for `feature` test macros and not every test in a file by @s3cur3 in https://github.com/elixir-wallaby/wallaby/pull/795
+
+## v0.30.9
+
+- fix unhandled alerts by @s3cur3 in https://github.com/elixir-wallaby/wallaby/pull/779
+
+## v0.30.8
+
+- fix malformed JSON from chromedriver by @s3cur3 in https://github.com/elixir-wallaby/wallaby/pull/778
+
+## v0.30.7
+
+- refactor to map_intersperse by @bradhanks in https://github.com/elixir-wallaby/wallaby/pull/758
+- Fix Wallaby.Element.size/1 spec by @NikitaNaumenko in https://github.com/elixir-wallaby/wallaby/pull/759
+- Update README to Avoid Elixir Warning by @stratigos in https://github.com/elixir-wallaby/wallaby/pull/762
+- Update README: Local Sandbox File Location by @stratigos in https://github.com/elixir-wallaby/wallaby/pull/766
+- Update chrome.ex by @RicoTrevisan in https://github.com/elixir-wallaby/wallaby/pull/768
+- Make Query.text/2 docs also point to assert_text/{2,3} by @s3cur3 in https://github.com/elixir-wallaby/wallaby/pull/770
+- Update README: Separate Phoenix setup from Ecto by @Corkle in https://github.com/elixir-wallaby/wallaby/pull/772
+- Address deprecation; prefer ExUnit.Case.register_test/6 by @vanderhoop in https://github.com/elixir-wallaby/wallaby/pull/776
+- Fix newer invalid selector error from chromedriver by @mhanberg in 4f82ca82a6c417d298663ac4a996d49e1150d6f2
 
 ## v0.30.6
 
