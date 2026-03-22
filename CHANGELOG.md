@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.30.13](https://github.com/hissssst/wallaby/compare/v0.30.12...v0.30.13) (2026-03-22)
+
+
+### Bug Fixes
+
+* beam metadata not set when using custom capabilities ([#744](https://github.com/hissssst/wallaby/issues/744)) ([cacc8a6](https://github.com/hissssst/wallaby/commit/cacc8a6286dfb2adf4472cb1aee584e662e62bc3))
+* cap chromedriver concurrency at 10 ([831fa2c](https://github.com/hissssst/wallaby/commit/831fa2c490bdcd2b3049b76a3267bea4c91a1a8d)), closes [#720](https://github.com/hissssst/wallaby/issues/720) [#722](https://github.com/hissssst/wallaby/issues/722)
+* **chromedriver:** Account for Chromium when doing the version matching ([#698](https://github.com/hissssst/wallaby/issues/698)) ([3e5c148](https://github.com/hissssst/wallaby/commit/3e5c1489d56d0d5e7d42591a95caf7162a111971))
+* flush a DOWN message if one was present ([#832](https://github.com/hissssst/wallaby/issues/832)) ([63d64de](https://github.com/hissssst/wallaby/commit/63d64dec492d06f4b609c67bfef41deac161b8a5))
+* handle new response from chromedriver ([4f82ca8](https://github.com/hissssst/wallaby/commit/4f82ca82a6c417d298663ac4a996d49e1150d6f2))
+* removed elixir 1.19 warnings ([#823](https://github.com/hissssst/wallaby/issues/823)) ([f64b943](https://github.com/hissssst/wallaby/commit/f64b943aca168ddf5869081201a5993384a66d61))
+* use detected chrome binary path as default ([#740](https://github.com/hissssst/wallaby/issues/740)) ([1b164ec](https://github.com/hissssst/wallaby/commit/1b164ec9c514f2502fe9317c7c8b2df609fed80a)), closes [#739](https://github.com/hissssst/wallaby/issues/739)
+
 ## [0.30.12](https://github.com/elixir-wallaby/wallaby/compare/v0.30.11...v0.30.12) (2026-01-09)
 
 
